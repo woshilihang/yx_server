@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <button onclick="handleRequest()">发送数据</button>
+
+  <script type="text/javascript">
+    const handleRequest = () => {
+      fetch('http://localhost:5000/job/publish', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcGVuaWQiOiJvb29neTFUaTJiVU85TEZiRmEyNmU4Y3R5SVhrIiwiaWF0IjoxNTgyMzYyMzM3LCJleHAiOjE1ODI0NDg3Mzd9.2K9KYyvaeo2ZS3_m_zymos5C8PuAJtNRxAqw3q_gzq4',
+        },
+        body: JSON.stringify({
+          "job_type": "product",
+          "job_city": "beijing",
+          "job_name": "产品实习生",
+          "job_email": "test@163.com",
+          "job_origin": "hr发布",
+          "job_desc": "这是职位详情描述",
+          "job_isOffical": true,
+        })
+      }).then(res => {
+        console.log(res)
+      })
+    }
+  </script>
+</body>
+
+</html>

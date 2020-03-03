@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <input type="file" id="file" accept="image/*"/>
+    <button id="submit">提交</button>
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    $(function(){
+        $('#submit').click(()=>{
+          alert(111)
+            let file = $('#file')[0].files[0]
+            let formData = new FormData()
+            formData.set('file',file)
+            formData.set('name',file.name)
+            formData.set('timestamp',Date.now())
+            $.ajax({
+                url:'http://localhost:5000/api/upload',
+                type:'post',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData:false,
+                success(res){
+                    console.log(res)
+                }
+            })
+        })
+    })
+</script>
+</html>
