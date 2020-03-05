@@ -39,7 +39,8 @@ app.use(ErrorHandle).use(KoaJwt(
     /\/user\/login/,
     /\/job\/publish/,
     /\job\/list/,
-    /\job\/detail/,
+    /\/job\/detail/,
+    /\/pins\/upload/,
   ],
 }));
 

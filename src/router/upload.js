@@ -26,9 +26,10 @@ const upload = multer({
   }
 });
 
-router.post('/api/upload', upload.single('file'), async (ctx, next) => {
+router.post('/pins/upload', upload.single('file'), async (ctx, next) => {
   // 返回原文件名
   const singleFile = ctx.request.file;
+  console.log(singleFile);
   let name = singleFile && singleFile.originalname;
   let url = `/uploads/${name}`;
 
