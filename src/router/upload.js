@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
   // 文件保存路径
   destination: (req, file, cb) => {
     console.log('file ---', file)
-    cb(null, path.join(__dirname, '../public/uploads'));
+    cb(null, path.join(__dirname, '../static/uploads'));
   },
   // 修改文件名称
   filename: (req, file, cb) => {
@@ -30,14 +30,26 @@ router.post('/pins/upload', upload.single('file'), async (ctx, next) => {
   // 返回原文件名
   const singleFile = ctx.request.file;
   console.log(singleFile);
-  let name = singleFile && singleFile.originalname;
+  let name = singleFile && (singleFile.filename || singleFile.originalname);
   let url = `/uploads/${name}`;
 
-  ctx.body = {
-    code: 200,
-    name,
-    url,
-    userInfo: ctx.request.body
+  if(url) {
+    ctx.body = {
+      code: 200,
+      msg: "图片上传成功",
+      data: {
+        filename: name,
+        imgUrl: url,
+        size: singleFile.size,
+        imgType: singleFile.mimetype
+      }
+    }
+  } else {
+    ctx.body = {
+      code: 1050,
+      msg: "图片上传错误",
+      data: {}
+    }
   }
 });
 
