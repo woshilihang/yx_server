@@ -8,8 +8,11 @@ const router = new Router();
 const storage = multer.diskStorage({
   // 文件保存路径
   destination: (req, file, cb) => {
-    console.log('file ---', file)
-    cb(null, path.join(__dirname, '../static/uploads'));
+    console.log('file ---', file);
+    // TODO:  根据请求内容将资源分开存放
+    console.log('上传文件的 req ---', req.body.path);
+    const savePath = req.body.path ? `/${req.body.path}`: '/';
+    cb(null, path.join(__dirname, '../static/uploads', savePath));
   },
   // 修改文件名称
   filename: (req, file, cb) => {
@@ -31,7 +34,10 @@ router.post('/pins/upload', upload.single('file'), async (ctx, next) => {
   const singleFile = ctx.request.file;
   console.log(singleFile);
   let name = singleFile && (singleFile.filename || singleFile.originalname);
-  let url = `/uploads/${name}`;
+  console.log(ctx.request.body, 'ctx.requst');
+  const savePath = ctx.request.body.path ? `/${ctx.request.body.path}/`: '/';
+  let url = `/uploads${savePath}${name}`;
+  console.log('pins/upload api url', url);
 
   if(url) {
     ctx.body = {

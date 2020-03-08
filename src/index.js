@@ -41,6 +41,8 @@ app.use(ErrorHandle).use(KoaJwt(
     /\job\/list/,
     /\/job\/detail/,
     /\/pins\/upload/,
+    /\/pins\/list/,
+
   ],
 }));
 

@@ -1,4 +1,6 @@
-// const 
+const jwt = require('jsonwebtoken');
+const { mdSecret } = require('../config/app');
+// const
 // 这里做一个常用公司数据信息保存，如果这里没有就去数据库存获取把用户导向去新建一个公司名称，及上传公司logo
 // companyName 不能重复，独一无二的
 const companyListData = [
@@ -54,5 +56,13 @@ const matchCompany = (name) => {
 
 module.exports = {
   companyListData,
-  matchCompany
+  matchCompany,
+  getJWTPayload
 };
+
+
+/* 通过token获取JWT的payload部分 */
+function getJWTPayload(token) {
+  // 验证并解析JWT
+  return jwt.verify(token.split(' ')[1], mdSecret);
+}
