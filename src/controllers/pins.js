@@ -69,8 +69,8 @@ class PinsController {
         if (userInfo) {
           const { nickName, avatar = '', company = '', job_type = '' } = userInfo;
           // 如果是Mongoose查出来的对象则需要处理成object，
-          const restObj = isMongoObj ? { ...doc.toObject() }: doc;
-          let tempData = Object.assign({}, restObj , { [`${doc}_id`]: doc._id },
+          const restObj = isMongoObj ? { ...doc.toObject() } : doc;
+          let tempData = Object.assign({}, restObj, { [`${doc}_id`]: doc._id },
             {
               userInfo: {
                 nickName,
@@ -144,12 +144,12 @@ class PinsController {
             }).exec().then(async doc => {
               console.log('查询到该文章所有的一级文章评论数据为 ----', doc);
               let waitReqArr = [];
-              
+
               [...doc].forEach(async reply => {
                 // console.log('doc.reply_childs', reply.reply_childs);
                 // console.log(!!reply.reply_childs);
                 let waitReqChildArr = [];
-                if(reply.reply_childs) {
+                if (reply.reply_childs) {
                   console.log('一级文章数据具有子评论, ---', doc.reply_childs);
                   [...reply.reply_childs].forEach(reply_child => {
                     console.log('reply_uid', reply_child.reply_uid)
@@ -246,6 +246,60 @@ class PinsController {
       });
     })
   }
+
+  /**
+   * 点赞
+   *
+   * @memberof PinsController
+   */
+  postPinsPrize = async ctx => {
+    const { pins_id } = ctx.request.body;
+    let uid = ''
+    await this.findUserById(ctx).then(openid => uid = openid)
+    console.log(uid, 'uid 用户id ----- ')
+    await PinsModal.findById({
+      _id: pins_id
+    }).exec().then(async pins => {
+      console.log(pins, 'pins ----')
+      if(!pins) {
+        ctx.body = {
+          code: 200,
+          message: 'pins为null'
+        }
+      }
+      const pins_prizelist = pins.toObject().pins_prize || [];
+      console.log('pins_prizelist --- ', pins_prizelist)
+      const isExistPrizeUser = pins_prizelist.includes(uid)
+      const newPinsPrizeList = isExistPrizeUser ? pins_prizelist.filter(item => item !== uid) : [
+        ...pins_prizelist,
+        uid
+      ]
+      await PinsModal.updateOne({
+        _id: pins_id
+      }, {
+        pins_prize: newPinsPrizeList
+      }).exec().then(updatePins => {
+        console.log('更新之后的数据', updatePins);
+        ctx.body = {
+          code: 200,
+          message: isExistPrizeUser ? '取消点赞' : '点赞成功',
+          data: {}
+        }
+      })
+    });
+
+  }
+
+  findUserById = async (ctx) => {
+    const authorization = ctx.request.header.authorization;
+
+    if (authorization) {
+      let { openid = '' } = getJWTPayload(authorization);
+      return openid
+    }
+  }
+
 }
+
 
 module.exports = new PinsController();

@@ -15,12 +15,12 @@ const PinsModal = new Schema({
     default: [],
   },
   pins_prize: {
-    type: Number,
-    default: 0,
+    type: Array,
+    default: [],
   },
   pins_collect: {
-    type: Number,
-    default: 0,
+    type: Array,
+    default: [],
   },
   pins_comment: {
     type: Number,

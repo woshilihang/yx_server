@@ -24,6 +24,8 @@ router.get('/pins/list', PinsController.getPinsList);
 
 router.get('/pins/detail', PinsController.getPinsDetail);
 
+router.post('/pins/prize', PinsController.postPinsPrize);
+
 router.post('/reply/publish', ReplyController.publishReply);
 
 router.post('/user/update', UserController.updateMsg);

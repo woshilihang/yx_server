@@ -56,7 +56,7 @@ class ReplyController {
         // await ReplyModal.findOneAndUpdate({
         //   reply_to_id
         // }, {
-        //   reply_childs: 
+        //   reply_childs:
         // }).exec().then(reply => {
         //   console.log('更新mreply的数据记过')
         // })
@@ -65,6 +65,15 @@ class ReplyController {
           _id: reply_to_id
         }).then(async reply => {
           console.log(reply, 'reply');
+          if(!reply) {
+            ctx.body = {
+              code: 200,
+              message: '没有该条以及评论',
+              data: {}
+            }
+            return ;
+          }
+
           const _reply_child = reply.toObject().reply_childs;
           console.log(_reply_child, '_reply_child');
           const new_reply_child = [
