@@ -4,6 +4,7 @@ const JobController = require('../controllers/job');
 const PinsController = require('../controllers/pins');
 const ReplyController = require('../controllers/reply');
 const UserController = require('../controllers/user');
+const CopyController = require('../controllers/copy');
 
 
 const router = new Router();
@@ -32,7 +33,12 @@ router.post('/user/update', UserController.updateMsg);
 
 router.get('/user/msg', UserController.getUserMsg);
 
+router.get('/user/publish', UserController.getUserPublish)
 
+// copy
+router.post('/user/publishCopy', CopyController.setCopy)
+
+router.get('/user/getCopyList', CopyController.getCopy)
 
 
 module.exports = router;
