@@ -1,3 +1,4 @@
+const PassThrough = require('stream').PassThrough;
 const Router = require('@koa/router');
 
 const JobController = require('../controllers/job');
@@ -5,6 +6,8 @@ const PinsController = require('../controllers/pins');
 const ReplyController = require('../controllers/reply');
 const UserController = require('../controllers/user');
 const CopyController = require('../controllers/copy');
+
+const { getWxCodeUnlimit } = require('../utils/getWxCode');
 
 
 const router = new Router();
@@ -40,5 +43,13 @@ router.post('/user/publishCopy', CopyController.setCopy)
 
 router.get('/user/getCopyList', CopyController.getCopy)
 
+// 生成小程序码
+router.get('/wx/common/qrcode', async ctx => {
+  const stream = await getWxCodeUnlimit({
+    page: 'pages/job_detail/index',
+    scene: 'abc123'
+  });
+  ctx.body = stream.pipe(PassThrough())
+});
 
 module.exports = router;

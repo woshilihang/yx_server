@@ -12,6 +12,7 @@ const storage = multer.diskStorage({
     // TODO:  根据请求内容将资源分开存放
     console.log('上传文件的 req ---', req.body.path);
     const savePath = req.body.path ? `/${req.body.path}`: '/';
+    console.log(path.join(__dirname, '../static/uploads', savePath), "path.join(__dirname, '../static/uploads', savePath)")
     cb(null, path.join(__dirname, '../static/uploads', savePath));
   },
   // 修改文件名称
