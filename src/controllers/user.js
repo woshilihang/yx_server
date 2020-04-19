@@ -7,6 +7,32 @@ const { getJWTPayload } = require('../utils/index');
 class UserController {
   constructor() { }
 
+  getUserInfo = async ctx => {
+    const authorization = ctx.request.header.authorization;
+    if (authorization) {
+
+      const { openid } = getJWTPayload(authorization);
+      await UserModal.findOne({
+        openid
+      }).exec().then(userInfo => {
+        if(userInfo) {
+          ctx.body = {
+            code: 200,
+            message: '获取用户的基本信息成功',
+            data: {
+              userInfo
+            }
+          };
+        } else {
+          ctx.body = {
+            code: 500,
+            message: '用户不存在，token无效',
+            data: {}
+          };
+        }
+      });
+    }
+  }
 
   getUserMsg = async ctx => {
     const authorization = ctx.request.header.authorization;
@@ -22,7 +48,8 @@ class UserController {
             code: 200,
             message: '用户已经认证',
             data: {
-              isConfirm: !!userInfo.company
+              isConfirm: !!userInfo.company,
+              company: userInfo.company
             }
           };
         } else {
@@ -38,9 +65,9 @@ class UserController {
   }
 
   updateMsg = async ctx => {
-    const { userName, wx, gender, company, job_type, job_img } = ctx.request.body;
+    const { username, wx, gender, company, job_type, job_img } = ctx.request.body;
     const params = {
-      userName,
+      username,
       wx,
       gender,
       company,
@@ -61,7 +88,7 @@ class UserController {
       await UserModal.findOneAndUpdate({
         openid
       }, {
-        userName,
+        username,
         wx,
         gender,
         company,
@@ -74,7 +101,7 @@ class UserController {
           code: 200,
           message: '信息更新成功',
           data: {
-            params
+            ...params
           }
         }
       });

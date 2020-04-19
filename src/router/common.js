@@ -36,6 +36,8 @@ router.post('/user/update', UserController.updateMsg);
 
 router.get('/user/msg', UserController.getUserMsg);
 
+router.get('/user/info', UserController.getUserInfo);
+
 router.get('/user/publish', UserController.getUserPublish)
 
 // copy

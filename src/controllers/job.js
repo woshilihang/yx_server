@@ -21,7 +21,7 @@ class Job {
     // job_origin: 'hr' | 'sp' | 'temp',
     // job_desc: '工作概述，这里需要加上文本格式',
     // job_isOffical: true, // 是否可转正
-    const { job_type, job_city, job_name, job_email, job_origin, job_desc, job_isOffical, job_company = '字节跳动' } = ctx.request.body;
+    const { job_type, job_city, job_name, job_email, job_origin, job_desc, job_isOffical, job_company } = ctx.request.body;
     // 验证token，查询到用户openId，插入该文章
     const authorization = ctx.request.header.authorization;
     console.log('token -- ', authorization);
@@ -146,7 +146,7 @@ class Job {
         data: {
           job_id,
           job_type,
-          job_city,
+          job_city: [...job_city],
           job_email,
           job_origin,
           job_desc,
