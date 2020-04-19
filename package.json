@@ -5,7 +5,7 @@
   "main": "./src/index.js",
   "scripts": {
     "start": "nodemon ./src/index.js",
-    "pm2:start": "pm2 start my_app.js --node-args='--harmony'"
+    "pm2:start": "pm2 start ./src/index.js --node-args='--harmony'"
   },
   "keywords": [],
   "author": "",
