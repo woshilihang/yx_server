@@ -104,8 +104,8 @@ class Job {
         job_company: 1,
         _id: 1,
       }, {
-        skip: (nextPageNum - 1) * 2, // 相当于页数
-        limit: 2, // 相当于每页个数
+        skip: (nextPageNum - 1) * 8, // 相当于页数
+        limit: 8, // 相当于每页个数
       }, (err, doc) => {
         if (!err) {
           allListData = [...doc].map(company =>

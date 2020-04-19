@@ -47,7 +47,9 @@ const NotMatchMsg = {
 
 const matchCompany = (name) => {
   // 针对公司数据做匹配
-  const matched = companyListData.filter(company => company.companyName === name || company.keyword.includes(name));
+  const matched = companyListData.filter(company => {
+    return company.companyName === name || company.keyword.includes(name)
+  });
   if (!matched.length) return { companyName: name, ...NotMatchMsg };
 
   console.log('matched company detail----', matched);
