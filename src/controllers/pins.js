@@ -61,6 +61,7 @@ class PinsController {
     }
   }
 
+
   handleGetData = async (doc, openid, isMongoObj = true) => {
     return new Promise(async (resolve, reject) => {
       await UserModal.findOne({
@@ -70,6 +71,10 @@ class PinsController {
           const { nickName, avatar = '', company = '', job_type = '' } = userInfo;
           // 如果是Mongoose查出来的对象则需要处理成object，
           const restObj = isMongoObj ? { ...doc.toObject() } : doc;
+
+          const pins_prizelist = restObj.pins_prize || [];
+          const isExistPrizeUser = pins_prizelist.includes(openid)
+
           let tempData = Object.assign({}, restObj, { [`${doc}_id`]: doc._id },
             {
               userInfo: {
@@ -77,7 +82,9 @@ class PinsController {
                 avatar,
                 company,
                 job_type
-              }
+              },
+              pins_prize_self: isExistPrizeUser,
+              pins_prize_num: pins_prizelist.length
             }
           );
           resolve(tempData);
@@ -119,6 +126,8 @@ class PinsController {
         }).exec().then(async userInfo => {
           if (userInfo) {
             console.log(userInfo, 'userInfo')
+            const pins_prizelist = pinsRes.pins_prize || [];
+            const isExistPrizeUser = pins_prizelist.includes(pinsRes.uid)
             const { nickName, avatar = '', company = '', job_type = '' } = userInfo;
             let tempData = Object.assign({}, { ...pinsRes.toObject() }, { pins_id: pinsRes._id },
               {
@@ -127,7 +136,9 @@ class PinsController {
                   avatar,
                   company,
                   job_type
-                }
+                },
+                pins_prize_self: isExistPrizeUser,
+                pins_prize_num: pins_prizelist.length
               }
             );
 
@@ -261,7 +272,7 @@ class PinsController {
       _id: pins_id
     }).exec().then(async pins => {
       console.log(pins, 'pins ----')
-      if(!pins) {
+      if (!pins) {
         ctx.body = {
           code: 200,
           message: 'pins为null'
@@ -283,7 +294,11 @@ class PinsController {
         ctx.body = {
           code: 200,
           message: isExistPrizeUser ? '取消点赞' : '点赞成功',
-          data: {}
+          data: {
+            pins_prize_num: newPinsPrizeList.length || 0,
+            hasPrize: !isExistPrizeUser,
+            hasPrizeTxt: isExistPrizeUser ? '取消点赞' : '点赞成功'
+          }
         }
       })
     });

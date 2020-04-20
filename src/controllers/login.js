@@ -65,9 +65,9 @@ class Login {
         };
 
         if (!result) {
-          // 首次生成token，有效期为7天
+          // 首次生成token，有效期为100天
           const token = jwt.sign(userToken, mdSecret, {
-            expiresIn: 60 * 60 * 24 * 7
+            expiresIn: 60 * 60 * 24 * 100
           })
 
           const NewWechatUser = new WeChatUser({

@@ -88,14 +88,32 @@ class Job {
   }
 
   getJobList = async ctx => {
-    const { job_type = 'all', nextPageNum = 1 } = ctx.query;
+    const { job_type = 'all', nextPageNum = 1, keyword='' } = ctx.query;
     let allListData = [];
     // TODO: 这里获取所有的职位信息数据进行查询
     let queryTypes = job_type === 'all' ? {} : { job_type: job_type };
 
-    await JobModal.countDocuments({...queryTypes}).exec().then(async count => {
+    const _filter = {
+      $or: [
+        {job_name: {$regex: keyword, $options: '$i'}}, //  $options: '$i' 忽略大小写
+        {job_company: {$regex: keyword, $options: '$i'}}
+      ]
+    }
+    await JobModal.countDocuments({
+      $and: [
+        {
+          ...queryTypes,
+        },
+        _filter
+      ]
+    }).exec().then(async count => {
       await JobModal.find({
-        ...queryTypes
+        $and: [
+          {
+            ...queryTypes,
+          },
+          _filter
+        ]
       }, {
         job_name: 1,
         job_type: 1,
