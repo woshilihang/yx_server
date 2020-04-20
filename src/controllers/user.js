@@ -65,16 +65,24 @@ class UserController {
   }
 
   updateMsg = async ctx => {
-    const { username, wx, gender, company, job_type, job_img } = ctx.request.body;
+    
+    const { username, wx, scholl, grade, gender, company, job_type, job_img, job_time } = ctx.request.body;
     const params = {
       username,
       wx,
       gender,
       company,
       job_type,
-      job_img
+      job_img,
+      scholl,
+      grade,
+      job_time,
     };
-    console.log('[params] ---', params);
+    let _params = {}
+    for(let i in params) {
+      !!params[i] && (_params[i] = params[i])
+    }
+    console.log('[params] ---', _params);
 
     const authorization = ctx.request.header.authorization;
     if (authorization) {
@@ -88,12 +96,7 @@ class UserController {
       await UserModal.findOneAndUpdate({
         openid
       }, {
-        username,
-        wx,
-        gender,
-        company,
-        job_type,
-        job_img
+        ..._params
       }).exec().then(async result => {
         console.log('result ---', result);
 
