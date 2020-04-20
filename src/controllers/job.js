@@ -88,31 +88,36 @@ class Job {
   }
 
   getJobList = async ctx => {
-    const { job_type = 'all', nextPageNum = 1, keyword='' } = ctx.query;
+    const { job_type = 'all', nextPageNum = 1, keyword='', city='' } = ctx.query;
     let allListData = [];
-    // TODO: 这里获取所有的职位信息数据进行查询
-    let queryTypes = job_type === 'all' ? {} : { job_type: job_type };
 
-    const _filter = {
+    // 这里获取所有的职位信息数据进行查询
+    let _filterTypes = job_type === 'all' ? {} : { job_type: job_type };
+    const _filterKeyWord = keyword ? {
       $or: [
         {job_name: {$regex: keyword, $options: '$i'}}, //  $options: '$i' 忽略大小写
-        {job_company: {$regex: keyword, $options: '$i'}}
+        {'job_company.companyName': keyword}
       ]
-    }
+    }: {};
+    const _filterCity = city ? {
+      job_city: {
+        $elemMatch: { // 数组中是否存在某个字段值
+          $eq: city
+        }
+      }
+    } : {}
     await JobModal.countDocuments({
       $and: [
-        {
-          ...queryTypes,
-        },
-        _filter
+        _filterTypes,
+        _filterKeyWord,
+        _filterCity
       ]
     }).exec().then(async count => {
       await JobModal.find({
         $and: [
-          {
-            ...queryTypes,
-          },
-          _filter
+          _filterTypes,
+          _filterKeyWord,
+          _filterCity
         ]
       }, {
         job_name: 1,
