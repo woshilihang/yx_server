@@ -2,8 +2,7 @@ const Mongoose = require('mongoose')
 
 const Schema = Mongoose.Schema
 
-// 拷贝内容modal
-const CopyModal = new Schema({
+const ColectModal = new Schema({
   uid: {
     type: String,
     default: '',
@@ -14,9 +13,10 @@ const CopyModal = new Schema({
     default: '',
     required: true
   },
-  copy_val: {
+  collect_origin: {
     type: String,
-    default: ''
+    default: '',
+    required: true
   },
   createAt: {
     type: Date,
@@ -28,4 +28,4 @@ const CopyModal = new Schema({
   },
 });
 
-module.exports = Mongoose.model('copy', CopyModal);
+module.exports = Mongoose.model('collect', ColectModal);

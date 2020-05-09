@@ -6,6 +6,8 @@ const PinsController = require('../controllers/pins');
 const ReplyController = require('../controllers/reply');
 const UserController = require('../controllers/user');
 const CopyController = require('../controllers/copy');
+const RentController = require('../controllers/rent');
+const CollectController = require('../controllers/collect');
 
 const { getWxCodeUnlimit } = require('../utils/getWxCode');
 
@@ -38,12 +40,30 @@ router.get('/user/msg', UserController.getUserMsg);
 
 router.get('/user/info', UserController.getUserInfo);
 
-router.get('/user/publish', UserController.getUserPublish)
+router.get('/user/publish', UserController.getUserPublish);
 
 // copy
-router.post('/user/publishCopy', CopyController.setCopy)
+router.post('/user/publishCopy', CopyController.setCopy);
 
-router.get('/user/getCopyList', CopyController.getCopy)
+router.get('/user/getCopyList', CopyController.getCopy);
+
+// rent
+router.post('/rent/publish', RentController.publishPins);
+
+router.get('/rent/list', RentController.getRentList);
+
+router.get('/rent/detail', RentController.getRentDetail);
+
+
+// 收藏相关
+router.post('/collect/set', CollectController.setCollect);
+
+router.post('/collect/get', CollectController.getCollect);
+
+router.get('/collect/list', CollectController.getCollectList);
+
+
+
 
 // 生成小程序码
 router.get('/wx/common/qrcode', async ctx => {
